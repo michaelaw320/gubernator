@@ -57,7 +57,7 @@ func peer(ip string, self string, ipv6 bool) PeerInfo {
 	return PeerInfo{
 		DataCenter:  "",
 		HTTPAddress: ip + ":80",
-		GRPCAddress: ip + ":81",
+		GRPCAddress: grpc,
 		IsOwner:     grpc == self,
 	}
 
@@ -82,7 +82,7 @@ func (x *DNSPool) task() {
 					delay = rec.Header().Ttl
 					update = append(update, peer(rec.(*dns.A).A.String(), x.conf.OwnAddress, false))
 				} else {
-					x.log.Info("Ignored ", rec)
+					x.log.Debug("Ignored ", rec)
 				}
 			}
 			for _, rec := range r6.Answer {
@@ -90,15 +90,15 @@ func (x *DNSPool) task() {
 					delay = rec.Header().Ttl
 					update = append(update, peer(rec.(*dns.AAAA).AAAA.String(), x.conf.OwnAddress, true))
 				} else {
-					x.log.Info("Ignored ", rec)
+					x.log.Debug("Ignored ", rec)
 				}
 			}
 		} else {
 			x.log.Error("Errors ", err4, err6)
 		}
-		x.log.Info("Update: ", update)
+		x.log.Debug("Update: ", update)
 		x.conf.OnUpdate(update)
-		x.log.Info("going to sleep for ", delay)
+		x.log.Debug("going to sleep for ", delay)
 		select {
 		case <-x.ctx.Done():
 			return
