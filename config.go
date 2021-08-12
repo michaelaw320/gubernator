@@ -333,6 +333,7 @@ func SetupDaemonConfig(logger *logrus.Logger, configFile string) (DaemonConfig, 
 
 	// DNS Config
 	setter.SetDefault(&conf.DNSPoolConf.FQDN, os.Getenv("GUBER_DNS_FQDN"))
+	setter.SetDefault(&conf.DNSPoolConf.OwnAddress, conf.AdvertiseAddress)
 
 	// PeerPicker Config
 	if pp := os.Getenv("GUBER_PEER_PICKER"); pp != "" {
