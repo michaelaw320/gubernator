@@ -188,7 +188,7 @@ type DaemonConfig struct {
 	K8PoolConf K8sPoolConfig
 
 	// (Optional) DNS Configuration used for peer discovery
-	DNSConf DNSConfig
+	DNSPoolConf DNSPoolConfig
 
 	// (Optional) Member list configuration used for peer discovery
 	MemberListPoolConf MemberListPoolConfig
@@ -268,7 +268,7 @@ func SetupDaemonConfig(logger *logrus.Logger, configFile string) (DaemonConfig, 
 	setter.SetDefault(&conf.Behaviors.MultiRegionBatchLimit, getEnvInteger(log, "GUBER_MULTI_REGION_BATCH_LIMIT"))
 	setter.SetDefault(&conf.Behaviors.MultiRegionSyncWait, getEnvDuration(log, "GUBER_MULTI_REGION_SYNC_WAIT"))
 
-	choices := []string{"member-list", "k8s", "etcd"}
+	choices := []string{"member-list", "k8s", "etcd", "dns"}
 	setter.SetDefault(&conf.PeerDiscoveryType, os.Getenv("GUBER_PEER_DISCOVERY_TYPE"), "member-list")
 	if !slice.ContainsString(conf.PeerDiscoveryType, choices, nil) {
 		return conf, fmt.Errorf("GUBER_PEER_DISCOVERY_TYPE is invalid; choices are [%s]`", strings.Join(choices, ","))
@@ -332,7 +332,7 @@ func SetupDaemonConfig(logger *logrus.Logger, configFile string) (DaemonConfig, 
 	}
 
 	// DNS Config
-	setter.SetDefault(&conf.DNSConf.FQDN, os.Getenv("GUBER_DNS_FQDN"))
+	setter.SetDefault(&conf.DNSPoolConf.FQDN, os.Getenv("GUBER_DNS_FQDN"))
 
 	// PeerPicker Config
 	if pp := os.Getenv("GUBER_PEER_PICKER"); pp != "" {
