@@ -186,10 +186,6 @@ func (s *Daemon) Start(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrap(err, "while creating the DNS pool")
 		}
-		// FIXME
-		// FIXME
-		// FIXME
-		// FIXME
 	case "member-list":
 		s.conf.MemberListPoolConf.OnUpdate = s.V1Server.SetPeers
 		s.conf.MemberListPoolConf.Logger = s.log

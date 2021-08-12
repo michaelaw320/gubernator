@@ -247,8 +247,9 @@ Example response:
 ```
 
 ### Deployment
-NOTE: Gubernator uses etcd or kubernetes to discover peers and establish a cluster. If you
-don't have either, the docker-compose method is the simplest way to try gubernator out.
+NOTE: Gubernator uses `etcd` or Kubernetes or round-robin DNS to discover peers and
+establish a cluster. If you don't have either, the docker-compose method is the
+simplest way to try gubernator out.
 
 ##### Docker with existing etcd cluster
 ```bash
@@ -285,6 +286,14 @@ $ vi k8s-deployment.yaml
 
 # Create the deployment (includes headless service spec)
 $ kubectl create -f k8s-deployment.yaml
+```
+
+#### Round-robin DNS
+If your DNS service supports auto-registration, for example AWS Route53 service discovery,
+you can use same fully-qualified domain name to both let your business logic containers or
+instances to find `gubernator` and for `gubernator` containers/instances to find each other.
+```
+FIXME FIXME FIXME
 ```
 
 ##### TLS
