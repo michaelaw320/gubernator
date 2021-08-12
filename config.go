@@ -187,6 +187,9 @@ type DaemonConfig struct {
 	// (Optional) K8s configuration used for peer discovery
 	K8PoolConf K8sPoolConfig
 
+	// (Optional) DNS Configuration used for peer discovery
+	DNSConf DNSConfig
+
 	// (Optional) Member list configuration used for peer discovery
 	MemberListPoolConf MemberListPoolConfig
 
@@ -328,6 +331,9 @@ func SetupDaemonConfig(logger *logrus.Logger, configFile string) (DaemonConfig, 
 			"`GUBER_K8S_WATCH_MECHANISM` needs to be either 'endpoints' or 'pods' (defaults to 'endpoints')")
 	}
 
+	// DNS Config
+	setter.SetDefault(&conf.DNSConf.FQDN, os.Getenv("GUBER_DNS_FQDN"))
+
 	// PeerPicker Config
 	if pp := os.Getenv("GUBER_PEER_PICKER"); pp != "" {
 		var replicas int
@@ -371,6 +377,10 @@ func SetupDaemonConfig(logger *logrus.Logger, configFile string) (DaemonConfig, 
 
 	if anyHasPrefix("GUBER_ETCD_", os.Environ()) {
 		log.Debug("ETCD peer pool config found")
+	}
+
+	if anyHasPrefix("GUBER_DNS_", os.Environ()) {
+		log.Debug("DNS peer pool config found")
 	}
 
 	// If env contains any TLS configuration
