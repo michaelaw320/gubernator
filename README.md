@@ -288,13 +288,20 @@ $ vi k8s-deployment.yaml
 $ kubectl create -f k8s-deployment.yaml
 ```
 
-#### Round-robin DNS
+##### Round-robin DNS
 If your DNS service supports auto-registration, for example AWS Route53 service discovery,
 you can use same fully-qualified domain name to both let your business logic containers or
 instances to find `gubernator` and for `gubernator` containers/instances to find each other.
-```
-FIXME FIXME FIXME
-```
+
+###### Local Testing
+
+1. terminal, start the environment: `docker-compose -f docker-compose-dns.yml up --build`
+2. terminal, drop into test container: `docker exec -it gubernator_shell_1 /bin/sh`
+3. in the test container: `curl -v gubernator/v1/GetRateLimits --data '{"requests":[{"name":"requests_per_sec","unique_key":"account.id=1234","hits":1,"duration":60000,"limit":10}]}'
+
+###### AWS
+
+TBD
 
 ##### TLS
 Gubernator supports TLS for both HTTP and GRPC connections. You can see an example with
